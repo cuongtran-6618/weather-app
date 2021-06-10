@@ -65,6 +65,5 @@ class WeatherService
     }
 
 }
-WeatherService.getEspooWeatherFormatData();
 
 module.exports = WeatherService;
