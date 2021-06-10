@@ -1,4 +1,4 @@
-const WeatherService = require('../services/weather');
+const { fetchWeatherByCity } = require('../services/weather');
 
 
 // @des     Get espoo weather data
@@ -7,20 +7,11 @@ const WeatherService = require('../services/weather');
 exports.getEspooWeather = (req, res, next) =>
 {
 
-    try
+    const data = fetchWeatherByCity().then(result =>
     {
-        const result = WeatherService.getEspooWeatherFormatData();
-        console.log(result);
-        res.status(200).render('weather/espoo', { title: 'Weather in Espoo', data: result });
-    } catch (error)
+        res.render('weather/espoo', { title: 'Weather in Espoo', data: result });
+    }).catch(error =>
     {
-        console.log(error)
-    }
-
-    /*
-        res.status(200).json({
-            success: true,
-            message: 'succesful'
-        });
-    */
+        res.render('weather/no-city', { title: 'There is an error when fetching espoo weather data', data: result });
+    });
 }
