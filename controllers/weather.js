@@ -8,6 +8,5 @@ module.exports.getCityWeather = async (req, res, next) =>
 {
     const city = req.params.city;
     const result = await fetchWeatherDataByCity(city);
-    console.log(result.icon);
     res.render('weather/byCity', { title: `Weather in ${ city }`, data: result });
 }

@@ -1,16 +1,17 @@
 extends ../layout
 block content
+  div(class="weather-main-container")  
     h1  #{data.city}
     div(class='date-container') 
       label #{data.date}
-    div(class='weather-icon-container') 
-      img(src="#{data.icon}", alt="")
+    div(class='weather-icon-container')    
+      img(src=data.icon alt='' style ="width: 50px, heigt: 50px")
     div(class='temperature-container') 
       label #{data.temperature}
-    div(class='description-container') 
+    p(class='description-container') 
       label #{data.description} 
-    div(class='feels-like-container') 
-      label #{data.feels_like}
-    div(class='min-max-container')
+    p(class='feels-like-container') 
+      label Feels like #{data.feels_like}
+    p(class='min-max-container')
       label #{data.min_temperature}/ #{data.max_temperature}
 
