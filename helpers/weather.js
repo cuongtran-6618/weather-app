@@ -1,8 +1,13 @@
 module.exports.urlBuilder = (city) =>
 {
-    return `${ process.env.WEATHER_API_ENDPOINT }${ process.env.WEATHER_API_VERSION }/weather?q=${ city }&appid=${ process.env.WEATHER_API_KEY }`;
+    return `${ process.env.WEATHER_API_ENDPOINT }${ process.env.WEATHER_API_VERSION }/weather?q=${ city }&units=metric&appid=${ process.env.WEATHER_API_KEY }`;
 }
 
+/**
+ * Format weather data
+ * @param {*} weatherJsonData 
+ * @returns 
+ */
 module.exports.formatWeatherData = (weatherJsonData = {}) =>
 {
     const currentDate = new Date();
@@ -10,8 +15,8 @@ module.exports.formatWeatherData = (weatherJsonData = {}) =>
     return {
         city: weatherJsonData.name,
         date: `${ currentDate.getDate() }-${ currentDate.getMonth() }-${ currentDate.getFullYear() }`,
-        icon: weatherJsonData.weather[ 0 ].icon,
-        temperature: weatherJsonData.main.temp,
+        icon: `${ process.env.WEATHER_API_IMAGE_PATH }${ weatherJsonData.weather[ 0 ].icon }${ process.env.IMAGE_SUBFIX }`,
+        temperature: weatherJsonData.main.temp + '°C',
         description: weatherJsonData.weather[ 0 ].description,
         feels_like: weatherJsonData.main.feels_like,
         max_temperature: weatherJsonData.main.temp_max + '°C',
