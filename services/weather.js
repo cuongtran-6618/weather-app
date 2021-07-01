@@ -14,7 +14,7 @@ module.exports.fetchWeatherDataByCity = async (city) =>
         return weatherJsonData;
     } catch (error)
     {
-        console.log(error)
+        return false;
     }
 };
 
@@ -23,5 +23,15 @@ const fetchWeatherData = async (city) =>
     const endpoint = urlBuilder(city);
     const apiResponse = await fetch(endpoint);
     const weatherJsonData = await apiResponse.json();
-    return formatWeatherData(weatherJsonData);
+    const statusCode = parseInt(weatherJsonData.cod);
+
+    if (404 === statusCode)
+    {
+        throw new Error(`Can't fetch the data for ${ city }`);
+    }
+
+    if (200 === statusCode)
+    {
+        return formatWeatherData(weatherJsonData);
+    }
 };
