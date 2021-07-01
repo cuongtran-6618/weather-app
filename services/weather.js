@@ -23,5 +23,6 @@ const fetchWeatherData = async (city) =>
     const endpoint = urlBuilder(city);
     const apiResponse = await fetch(endpoint);
     const weatherJsonData = await apiResponse.json();
+    console.log(formatWeatherData(weatherJsonData));
     return formatWeatherData(weatherJsonData);
 };
