@@ -1,5 +1,6 @@
-const { fetchWeatherDataByCity } = require('../services/weather');
+const { fetchWeatherDataByCity, insertWeatherDataByCity } = require('../services/weather');
 const Weather = require('../models/Weather');
+const { getToday } = require('../helpers/weather');
 
 // @desc     Get weather data
 // @router  GET /weather/index
@@ -12,16 +13,26 @@ module.exports.getWeatherIndex = async (req, res, next) =>
 }
 
 
-// @desc     Get weather data
-// @router  GET /weather/:city
-// @access  public
+/**
+ * Get city weather
+ * @param {*} req 
+ * @param {*} res 
+ * @param {*} next 
+ */
 module.exports.getCityWeather = async (req, res, next) =>
 {
-    const city = req.params.city;
-    const result = await fetchWeatherDataByCity(city);
-    res.render('weather/byCity', { title: `Weather in ${ city }`, data: result });
-}
+    try
+    {
+        const city = req.params.city;
+        const weatherResult = await fetchWeatherDataByCity(city);
 
+        res.status(200).json({ success: true, data: weatherResult })
+    } catch (error)
+    {
+        next(error)
+    }
+
+}
 
 // @desc    Create weather data to database (MongoDB currently)
 // @router  POST /weather/
@@ -30,16 +41,15 @@ module.exports.createCityWeather = async (req, res, next) =>
 {
     try
     {
-        console.log('createCityWeather controller called')
         const weatherData = req.body;
-        const data = Weather.create(weatherData);
+        const result = insertWeatherDataByCity(weatherData);
 
         res.status(200).json({
             success: true,
-            data: data
+            data: result
         });
     } catch (error)
     {
-        console.log(error)
+        next(error);
     }
 }
