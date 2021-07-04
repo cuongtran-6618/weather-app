@@ -67,3 +67,35 @@ module.exports.insertWeatherDataByCity = async (weatherData) =>
         return error
     }
 };
+
+/**
+ * Fetching data of all city by date
+ * @route /weather/:city
+ * @param string city
+ */
+module.exports.fetchWeatherDataByDate = async (date = null) =>
+{
+    try
+    {
+        const searchDay = (!date) ? getToday() : date;
+
+        // check from db
+        let weatherJsonData = await Weather.find({ date: searchDay });
+
+        if (!weatherJsonData)
+        {
+            console.log(`There is not any records matched with day`)
+            // TODO: NOTFOUND exceptions?
+            return false;
+
+        } else
+        {
+            return weatherJsonData;
+        }
+
+    } catch (error)
+    {
+        console.log(error)
+        return error;
+    }
+};
