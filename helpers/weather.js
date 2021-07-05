@@ -29,6 +29,5 @@ module.exports.formatWeatherData = (weatherJsonData = {}) =>
  */
 module.exports.getToday = () =>
 {
-    const currentDate = new Date();
-    return `${ currentDate.getDate() }-${ currentDate.getMonth() }-${ currentDate.getFullYear() }`;
+    new Date().toLocaleDateString();
 }
