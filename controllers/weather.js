@@ -1,6 +1,7 @@
 const { fetchWeatherDataByCity, insertWeatherDataByCity, fetchWeatherDataByDate } = require('../services/weather');
 const Weather = require('../models/Weather');
 const { getToday } = require('../helpers/weather');
+const { NotFoundException } = require('../exceptions/NotFoundException');
 
 // @desc     Get weather data
 // @router  GET /weather/index
@@ -25,8 +26,7 @@ module.exports.getCityWeather = async (req, res, next) =>
     {
         const city = req.params.city;
         const weatherResult = await fetchWeatherDataByCity(city);
-
-        res.status(200).json({ success: true, data: weatherResult })
+        res.json({ success: true, data: weatherResult })
     } catch (error)
     {
         next(error)
@@ -44,7 +44,7 @@ module.exports.createCityWeather = async (req, res, next) =>
         const weatherData = req.body;
         const result = insertWeatherDataByCity(weatherData);
 
-        res.status(200).json({
+        res.json({
             success: true,
             data: result
         });
@@ -67,13 +67,12 @@ module.exports.getAllCityWeatherByDate = async (req, res, next) =>
         const date = req.params.date;
         let weatherResult = await fetchWeatherDataByDate(date);
 
-        console.log(Array.isArray(weatherResult) && weatherResult.length === 0);
-        if (Array.isArray(weatherResult) && weatherResult.length === 0)
+        if (!weatherResult.length)
         {
-            weatherResult = `there isn't any record match with your condition`;
+            throw new NotFoundException;
         }
 
-        res.status(200).json({ success: true, data: weatherResult })
+        res.json({ success: true, data: weatherResult })
     } catch (error)
     {
         next(error)

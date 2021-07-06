@@ -1,8 +1,12 @@
-export default class BadRequestError extends Error
+class BadRequestError extends Error
 {
     constructor (message)
     {
         super(message);
-        this.name = 'BadRequestError'
+        this.name = 'BadRequestError';
+        this.statusCode = '400';
+        this.message = "Bad Request";
     }
 }
+
+module.exports = { BadRequestError }

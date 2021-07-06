@@ -1,6 +1,9 @@
 const fetch = require('node-fetch');
 const Weather = require('../models/Weather');
 const { urlBuilder, formatWeatherData, getToday } = require('../helpers/weather');
+const { BadRequestError } = require("../exceptions/BadRequestError");
+const { NotFoundException } = require("../exceptions/NotFoundException");
+
 
 /**
  * Fetching data from open weather API
@@ -9,47 +12,40 @@ const { urlBuilder, formatWeatherData, getToday } = require('../helpers/weather'
  */
 module.exports.fetchWeatherDataByCity = async (city) =>
 {
+
+    const today = getToday();
+
+    // check from db first
+    const weatherDataInDB = await Weather.findOne({ city, date: today });
+
+    if (weatherDataInDB)
+    {
+        return weatherDataInDB;
+    }
+
+    // if there is not data for that then loading from third party service
+    // then insert in to db
+    const weatherEndpoint = urlBuilder(city);
+    const apiResponse = await fetch(weatherEndpoint);
+    const apiResponseJson = await apiResponse.json();
+
+    if ('404' === apiResponseJson.cod)
+    {
+        throw new NotFoundException;
+    }
+
+    const weatherDataFromAPI = formatWeatherData(apiResponseJson);
+
     try
     {
-        const today = getToday();
-
-        // check from db first
-        let weatherJsonData = await Weather.findOne({ city, date: today });
-
-        // if there is not data for that then loading from third party service
-        // then insert in to db
-        if (!weatherJsonData)
-        {
-            console.log("load from api")
-            weatherJsonData = await fetchWeatherDataFromAPI(city);
-
-            this.insertWeatherDataByCity(weatherJsonData);
-        } else
-        {
-            console.log(`load weather data from db`);
-        }
-        return weatherJsonData;
+        const insertResponse = await this.insertWeatherDataByCity(weatherDataFromAPI);
     } catch (error)
     {
-        console.log(error)
-        return error;
+        throw new BadRequestError;
     }
+
+    return weatherDataFromAPI;
 };
-
-/**
- * Fetch data from API and then format the data
- * @param {string} city 
- * @returns array
- */
-const fetchWeatherDataFromAPI = async (city) =>
-{
-    const endpoint = urlBuilder(city);
-    const apiResponse = await fetch(endpoint);
-    const weatherJsonData = await apiResponse.json();
-
-    return formatWeatherData(weatherJsonData);
-};
-
 
 /**
  * Insert data from open waether API
@@ -60,11 +56,11 @@ module.exports.insertWeatherDataByCity = async (weatherData) =>
 {
     try
     {
-        console.log(`service insert weather data`);
-        return Weather.create(weatherData);
+        const insertWeatherResponse = await Weather.create(weatherData);
+        return insertWeatherResponse;
     } catch (error)
     {
-        return error
+        throw new BadRequestError;
     }
 };
 
@@ -75,27 +71,16 @@ module.exports.insertWeatherDataByCity = async (weatherData) =>
  */
 module.exports.fetchWeatherDataByDate = async (date = null) =>
 {
-    try
+
+    const searchDay = (!date) ? getToday() : date;
+
+    // check from db
+    let weatherDataInDB = await Weather.find({ date: searchDay });
+
+    if (!weatherDataInDB)
     {
-        const searchDay = (!date) ? getToday() : date;
-
-        // check from db
-        let weatherJsonData = await Weather.find({ date: searchDay });
-
-        if (!weatherJsonData)
-        {
-            console.log(`There is not any records matched with day`)
-            // TODO: NOTFOUND exceptions?
-            return false;
-
-        } else
-        {
-            return weatherJsonData;
-        }
-
-    } catch (error)
-    {
-        console.log(error)
-        return error;
+        throw new NotFoundException;
     }
+
+    return weatherDataInDB;
 };
