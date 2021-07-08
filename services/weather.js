@@ -1,25 +1,25 @@
 const fetch = require('node-fetch');
 const Weather = require('../models/Weather');
-const { urlBuilder, formatWeatherData, getToday } = require('../helpers/weather');
-const { BadRequestError } = require("../exceptions/BadRequestError");
-const { NotFoundException } = require("../exceptions/NotFoundException");
-
+const {
+    urlBuilder,
+    formatWeatherData,
+    getToday,
+} = require('../helpers/weather');
+const { BadRequestError } = require('../exceptions/BadRequestError');
+const { NotFoundException } = require('../exceptions/NotFoundException');
 
 /**
  * Fetching data from open weather API
  * @route /weather/:city
  * @param string city
  */
-module.exports.fetchWeatherDataByCity = async (city) =>
-{
-
+module.exports.fetchWeatherDataByCity = async (city) => {
     const today = getToday();
 
     // check from db first
     const weatherDataInDB = await Weather.findOne({ city, date: today });
 
-    if (weatherDataInDB)
-    {
+    if (weatherDataInDB) {
         return weatherDataInDB;
     }
 
@@ -29,19 +29,18 @@ module.exports.fetchWeatherDataByCity = async (city) =>
     const apiResponse = await fetch(weatherEndpoint);
     const apiResponseJson = await apiResponse.json();
 
-    if ('404' === apiResponseJson.cod)
-    {
-        throw new NotFoundException;
+    if ('404' === apiResponseJson.cod) {
+        throw new NotFoundException();
     }
 
     const weatherDataFromAPI = formatWeatherData(apiResponseJson);
 
-    try
-    {
-        const insertResponse = await this.insertWeatherDataByCity(weatherDataFromAPI);
-    } catch (error)
-    {
-        throw new BadRequestError;
+    try {
+        const insertResponse = await this.insertWeatherDataByCity(
+            weatherDataFromAPI
+        );
+    } catch (error) {
+        throw new BadRequestError();
     }
 
     return weatherDataFromAPI;
@@ -52,15 +51,12 @@ module.exports.fetchWeatherDataByCity = async (city) =>
  * @route /weather/:city
  * @param string city
  */
-module.exports.insertWeatherDataByCity = async (weatherData) =>
-{
-    try
-    {
+module.exports.insertWeatherDataByCity = async (weatherData) => {
+    try {
         const insertWeatherResponse = await Weather.create(weatherData);
         return insertWeatherResponse;
-    } catch (error)
-    {
-        throw new BadRequestError;
+    } catch (error) {
+        throw new BadRequestError();
     }
 };
 
@@ -69,17 +65,14 @@ module.exports.insertWeatherDataByCity = async (weatherData) =>
  * @route /weather/:city
  * @param string city
  */
-module.exports.fetchWeatherDataByDate = async (date = null) =>
-{
-
-    const searchDay = (!date) ? getToday() : date;
+module.exports.fetchWeatherDataByDate = async (date = null) => {
+    const searchDay = !date ? getToday() : date;
 
     // check from db
     let weatherDataInDB = await Weather.find({ date: searchDay });
 
-    if (!weatherDataInDB)
-    {
-        throw new NotFoundException;
+    if (!weatherDataInDB) {
+        throw new NotFoundException();
     }
 
     return weatherDataInDB;

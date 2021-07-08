@@ -26,17 +26,14 @@ app.use('/', indexRouter);
 app.use('/weather', weatherRouter);
 
 // catch 404 and forward to error handler
-app.use((req, res, next) => 
-{
-  next(createError(404));
+app.use((req, res, next) => {
+    next(createError(404));
 });
 
 // error handler
 app.use(errorHandler);
 
-
 const port = process.env.PORT || 3000;
-app.listen(port, () => 
-{
-  console.log("server started successfullly already")
-})
+app.listen(port, () => {
+    // console.log('server started successfullly already');
+});
