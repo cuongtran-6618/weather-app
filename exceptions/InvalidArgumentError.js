@@ -3,8 +3,8 @@ class InvalidArgumentError extends Error {
         super(message);
         this.name = 'InvalidArgumentError';
         this.statusCode = '422';
-        this.message = 'Invalid Argument Error';
+        this.message = message || 'Invalid Argument Error';
     }
 }
 
-module.exports = { BadRequestError };
+module.exports = { InvalidArgumentError };
