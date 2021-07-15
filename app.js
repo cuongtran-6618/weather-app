@@ -10,8 +10,13 @@ const indexRouter = require('./routes/index');
 const weatherRouter = require('./routes/weather');
 const errorHandler = require('./middleware/errorHandler');
 
+const connectMongoDB = async () => {
+    await connectDB();
+};
+
+connectMongoDB();
+
 const app = express();
-connectDB();
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
