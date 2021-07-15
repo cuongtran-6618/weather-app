@@ -30,17 +30,19 @@ module.exports.fetchWeatherDataByCity = async (city) => {
     const apiResponseJson = await apiResponse.json();
 
     if ('404' === apiResponseJson.cod) {
-        throw new NotFoundException();
+        throw new NotFoundException(
+            "Can't find the weather data with the given city"
+        );
     }
 
     const weatherDataFromAPI = formatWeatherData(apiResponseJson);
 
     try {
-        const insertResponse = await this.insertWeatherDataByCity(
-            weatherDataFromAPI
-        );
+        await this.insertWeatherDataByCity(weatherDataFromAPI);
     } catch (error) {
-        throw new BadRequestError();
+        throw new BadRequestError(
+            "There's a problem when insert data to MongoDB after fetching data from API"
+        );
     }
 
     return weatherDataFromAPI;
@@ -56,7 +58,7 @@ module.exports.insertWeatherDataByCity = async (weatherData) => {
         const insertWeatherResponse = await Weather.create(weatherData);
         return insertWeatherResponse;
     } catch (error) {
-        throw new BadRequestError();
+        throw new BadRequestError("Can't insert to Mongo DB with given data");
     }
 };
 
@@ -66,13 +68,15 @@ module.exports.insertWeatherDataByCity = async (weatherData) => {
  * @param string city
  */
 module.exports.fetchWeatherDataByDate = async (date = null) => {
-    const searchDay = !date ? getToday() : date;
+    const searchDay = date ? date : getToday();
 
     // check from db
-    let weatherDataInDB = await Weather.find({ date: searchDay });
+    const weatherDataInDB = await Weather.find({ date: searchDay });
 
     if (!weatherDataInDB) {
-        throw new NotFoundException();
+        throw new NotFoundException(
+            "Can't find the weather data with the given date"
+        );
     }
 
     return weatherDataInDB;

@@ -52,7 +52,7 @@ module.exports.getAllCityWeatherByDate = async (req, res, next) => {
         let weatherResult = await fetchWeatherDataByDate(date);
 
         if (!weatherResult.length) {
-            throw new NotFoundException();
+            throw new NotFoundException("Can't find the weather data by date");
         }
 
         res.json({ success: true, data: weatherResult });
