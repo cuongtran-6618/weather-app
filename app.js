@@ -37,5 +37,5 @@ app.use(errorHandler);
 
 const port = process.env.PORT || 3000;
 app.listen(port, () => {
-    // console.log('server started successfullly already');
+    console.log('server started successfullly already');
 });
