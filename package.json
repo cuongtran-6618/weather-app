@@ -4,7 +4,7 @@
     "private": true,
     "scripts": {
         "start": "nodemon server",
-        "test": "jest --coverage --verbose --passWithNoTests --watchAll --detectOpenHandles --testTimeout=100000",
+        "test": "jest --coverage --verbose --passWithNoTests --watchAll --detectOpenHandles --testTimeout=200000",
         "format": "eslint --fix *.js && prettier -w ."
     },
     "dependencies": {
