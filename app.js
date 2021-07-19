@@ -10,32 +10,26 @@ const indexRouter = require('./routes/index');
 const weatherRouter = require('./routes/weather');
 const errorHandler = require('./middleware/errorHandler');
 
-const connectMongoDB = async () => {
+module.exports = async () => {
+    console.log('app called');
     await connectDB();
+    const app = express();
+
+    app.use(logger('dev'));
+    app.use(express.json());
+    app.use(express.urlencoded({ extended: false }));
+    app.use(cookieParser());
+    app.use(express.static(path.join(__dirname, 'public')));
+    app.use('/', indexRouter);
+    app.use('/weather', weatherRouter);
+
+    // catch 404 and forward to error handler
+    app.use((req, res, next) => {
+        next(createError(404));
+    });
+
+    // error handler with custom error code in middleware
+    app.use(errorHandler);
+
+    return app;
 };
-
-connectMongoDB();
-
-const app = express();
-
-app.use(logger('dev'));
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
-app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public')));
-
-app.use('/', indexRouter);
-app.use('/weather', weatherRouter);
-
-// catch 404 and forward to error handler
-app.use((req, res, next) => {
-    next(createError(404));
-});
-
-// error handler
-app.use(errorHandler);
-
-const port = process.env.PORT || 3000;
-app.listen(port, () => {
-    // console.log('server started successfullly already');
-});
