@@ -10,9 +10,8 @@ const indexRouter = require('./routes/index');
 const weatherRouter = require('./routes/weather');
 const errorHandler = require('./middleware/errorHandler');
 
-module.exports = async () => {
-    console.log('app called');
-    await connectDB();
+module.exports = () => {
+    connectDB();
     const app = express();
 
     app.use(logger('dev'));

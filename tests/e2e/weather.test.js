@@ -2,30 +2,32 @@ const request = require('supertest');
 const server = require('../../server');
 const mongoose = require('mongoose');
 
-beforeEach((done) => {
-    mongoose.connect(
-        process.env.MONGO_URI,
-        { useNewUrlParser: true, useUnifiedTopology: true },
-        () => done()
-    );
-});
+const serverApp = server();
 
-afterEach((done) => {
-    mongoose.connection.db.dropDatabase(() => {
-        mongoose.connection.close(() => done());
-    });
-});
-
-describe('GET /weather', () => {
-    describe('Client visit espoo weather page', () => {
+describe('Test weather endpoint', () => {
+    describe('Client fetchs the weather data of a valid data page', () => {
         // should reponse with 200
         test('should response with 200 status', async () => {
-            return request(server)
+            return request(serverApp)
                 .get('/weather/espoo')
                 .expect(200)
                 .then((data) => {
-                    expect(data.text).toMatch(/Espoo/);
+                    const responseData = data.text;
+                    expect(responseData);
                 });
+
+            done();
+        });
+
+        test('should response with success status', async () => {
+            return request(serverApp)
+                .get('/weather/espoo')
+                .then((data) => {
+                    const responseData = data.text;
+                    expect(responseData).toContain('"success":true');
+                });
+
+            done();
         });
     });
 });
