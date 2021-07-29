@@ -1,41 +1,60 @@
-/*const {
+const {
     fetchWeatherDataByCity,
     insertWeatherDataByCity,
     fetchWeatherDataByDate,
 } = require('../../../services/weather');
+const request = require('supertest');
+const server = require('../../../server');
+const serverApp = server();
+
 const { MongoClient } = require('mongodb');
 
-describe('Weather services', () => {
+describe('WEATHER CRUD TESTING', () => {
     describe('Client fetchs the weather data of a valid city name', () => {
         // should reponse with 200
-        test('should response with 200 status', () => {});
-    });
-});
+        test('should response with 200 status', async () => {
+            const weatherFixtures = {
+                city: 'random-city',
+                date: '7/19/2021',
+                icon: 'http://openweathermap.org/img/wn/02d@2x.png',
+                temperature: 16.9,
+                description: 'few clouds',
+                feels_like: 16.34,
+                max_temperature: 18.39,
+                min_temperature: 15.55,
+                visibility: 10000,
+            };
 
-describe('insert', () => {
-    let connection;
-    let db;
-
-    beforeAll(async () => {
-        connection = await MongoClient.connect(process.env.MONGO_URI, {
-            useNewUrlParser: true,
+            return request(await serverApp)
+                .post('/weather')
+                .send(weatherFixtures)
+                .then((data) => {
+                    console.log(data.text);
+                    console.log(data.statusCode);
+                });
+            done();
         });
-        db = await connection.db(process.env.MONGO_DB_NAME);
-    });
 
-    afterAll(async () => {
-        await connection.close();
-        await db.close();
-    });
+        test('should response with 200 status', async () => {
+            const weatherFixtures = {
+                city: 'random-city',
+                date: '7/19/2021',
+                icon: 'http://openweathermap.org/img/wn/02d@2x.png',
+                temperature: 16.9,
+                description: 'few clouds',
+                feels_like: 16.34,
+                max_temperature: 18.39,
+                min_temperature: 15.55,
+                visibility: 10000,
+            };
 
-    it('should insert a doc into collection', async () => {
-        const users = db.collection('users');
-
-        const mockUser = { _id: 'some-user-id', name: 'John' };
-        await users.insertOne(mockUser);
-
-        const insertedUser = await users.findOne({ _id: 'some-user-id' });
-        expect(insertedUser).toEqual(mockUser);
+            return request(await serverApp)
+                .post('/weather')
+                .send(weatherFixtures)
+                .then((data) => {
+                    console.log(data.text);
+                });
+            done();
+        });
     });
 });
-*/
