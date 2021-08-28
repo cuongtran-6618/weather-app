@@ -1,6 +1,8 @@
 const appBootstrap = require('./server');
+const connectDB = require('./boostrap/database');
+
 const boostrap = async () => {
-    console.log('boostrap');
+    await connectDB();
     const app = await appBootstrap();
 
     const port = process.env.PORT || 3000;

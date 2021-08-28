@@ -1,17 +1,16 @@
 require('dotenv').config();
+
 const createError = require('http-errors');
 const express = require('express');
 const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
-const connectDB = require('./boostrap/database');
 
 const indexRouter = require('./routes/index');
 const weatherRouter = require('./routes/weather');
 const errorHandler = require('./middleware/errorHandler');
 
 module.exports = () => {
-    connectDB();
     const app = express();
 
     app.use(logger('dev'));
