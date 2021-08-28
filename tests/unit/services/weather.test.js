@@ -29,8 +29,6 @@ describe('WEATHER CRUD TESTING', () => {
                 .post('/weather')
                 .send(weatherFixtures)
                 .then((data) => {
-                    console.log(data.text);
-                    console.log(data.statusCode);
                 });
             done();
         });
@@ -52,7 +50,6 @@ describe('WEATHER CRUD TESTING', () => {
                 .post('/weather')
                 .send(weatherFixtures)
                 .then((data) => {
-                    console.log(data.text);
                 });
             done();
         });
