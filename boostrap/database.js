@@ -1,12 +1,17 @@
 const mongoose = require('mongoose');
 
 const connectDB = async () => {
-    await mongoose.connect(process.env.MONGO_URI, {
-        useNewUrlParser: true,
-        useCreateIndex: true,
-        useUnifiedTopology: true,
-        useFindAndModify: false,
-    });
+    try {
+        await mongoose.connect(process.env.MONGO_URI, {
+            useNewUrlParser: true,
+            useCreateIndex: true,
+            useUnifiedTopology: true,
+            useFindAndModify: false,
+        });
+    } catch (exception) {
+        console.log(exception);
+        throw new Error('Error while connecting mongo');
+    }
 };
 
 module.exports = connectDB;
