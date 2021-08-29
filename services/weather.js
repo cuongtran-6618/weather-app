@@ -48,11 +48,6 @@ module.exports.fetchWeatherDataByCity = async (city) => {
     return weatherDataFromAPI;
 };
 
-/**
- * Insert data from open waether API
- * @route /weather/:city
- * @param string city
- */
 module.exports.insertWeatherDataByCity = async (weatherData) => {
     try {
         const insertWeatherResponse = await Weather.create(weatherData);

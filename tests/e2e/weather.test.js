@@ -17,13 +17,10 @@ afterAll(async () => {
 describe('WEATHER ENDPOINT', () => {
     describe('Client fetchs the weather data of a valid city name', () => {
         // should reponse with 200
-        test('should response with 200 status', () =>
-            request(serverApp)
-                .get('/weather/espoo')
-                .expect(200)
-                .catch((error) => {
-                    console.log(error);
-                }));
+        test('should response with 200 status', async () => {
+            const res = await request(serverApp).get('/weather/espoo');
+            expect(res.status).toEqual(200);
+        })
 
         test('should response with success status, correct city name and date in response', () =>
             request(serverApp)
