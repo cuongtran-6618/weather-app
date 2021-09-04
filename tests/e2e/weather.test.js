@@ -20,7 +20,7 @@ describe('WEATHER ENDPOINT', () => {
         test('should response with 200 status', async () => {
             const res = await request(serverApp).get('/weather/espoo');
             expect(res.status).toEqual(200);
-        })
+        });
 
         test('should response with success status, correct city name and date in response', () =>
             request(serverApp)

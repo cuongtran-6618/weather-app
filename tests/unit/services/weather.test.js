@@ -28,8 +28,7 @@ describe('WEATHER CRUD TESTING', () => {
             return request(await serverApp)
                 .post('/weather')
                 .send(weatherFixtures)
-                .then((data) => {
-                });
+                .then((data) => {});
             done();
         });
 
