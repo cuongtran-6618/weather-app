@@ -29,7 +29,7 @@ module.exports.fetchWeatherDataByCity = async (city) => {
     const apiResponse = await fetch(weatherEndpoint);
     const apiResponseJson = await apiResponse.json();
 
-    if ('404' === apiResponseJson.cod) {
+    if (apiResponseJson.cod === '404') {
         throw new NotFoundException(
             "Can't find the weather data with the given city"
         );
@@ -63,7 +63,7 @@ module.exports.insertWeatherDataByCity = async (weatherData) => {
  * @param string city
  */
 module.exports.fetchWeatherDataByDate = async (date = null) => {
-    const searchDay = date ? date : getToday();
+    const searchDay = date || getToday();
 
     // check from db
     const weatherDataInDB = await Weather.find({ date: searchDay });

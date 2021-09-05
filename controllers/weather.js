@@ -3,8 +3,7 @@ const {
     insertWeatherDataByCity,
     fetchWeatherDataByDate,
 } = require('../services/weather');
-const Weather = require('../models/Weather');
-const { getToday } = require('../helpers/weather');
+
 const { NotFoundException } = require('../exceptions/NotFoundException');
 
 /**
@@ -15,7 +14,7 @@ const { NotFoundException } = require('../exceptions/NotFoundException');
  */
 module.exports.getCityWeather = async (req, res, next) => {
     try {
-        const city = req.params.city;
+        const { city } = req.params;
         const weatherResult = await fetchWeatherDataByCity(city);
         res.json({ success: true, data: weatherResult });
     } catch (error) {
@@ -48,8 +47,8 @@ module.exports.createCityWeather = async (req, res, next) => {
  */
 module.exports.getAllCityWeatherByDate = async (req, res, next) => {
     try {
-        const date = req.params.date;
-        let weatherResult = await fetchWeatherDataByDate(date);
+        const { date } = req.params;
+        const weatherResult = await fetchWeatherDataByDate(date);
 
         if (!weatherResult.length) {
             throw new NotFoundException("Can't find the weather data by date");
