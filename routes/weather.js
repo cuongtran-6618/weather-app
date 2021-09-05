@@ -1,15 +1,16 @@
-var express = require('express');
+const express = require('express');
 const {
     getCityWeather,
     createCityWeather,
     getAllCityWeatherByDate,
 } = require('../controllers/weather');
-var router = express.Router();
+
+const router = express.Router();
 
 router.route('/').post(createCityWeather);
 
 /* GET weather page. */
-//api.openweathermap.org/data/2.5/weather?q={city name}&appid={API key}
+// api.openweathermap.org/data/2.5/weather?q={city name}&appid={API key}
 router.route('/:city').get(getCityWeather);
 
 /**

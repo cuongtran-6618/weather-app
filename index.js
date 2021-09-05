@@ -5,7 +5,7 @@ const boostrap = async () => {
     await connectDB();
     const app = await appBootstrap();
 
-    const port = process.env.PORT || 3000;
+    const port = process.env.PORT || 3001;
 
     app.listen(port, () => {
         console.log('server started successfullly already');
