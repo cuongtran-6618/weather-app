@@ -23,3 +23,5 @@ module.exports.formatWeatherData = (weatherJsonData = {}) => ({
  * @returns string
  */
 module.exports.getToday = () => new Date().toLocaleDateString();
+
+module.exports.formatDate = (dateString) => dateString.replaceAll(/-/gi, '/');

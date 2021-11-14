@@ -1,2 +1,13 @@
 ### Fetching weather data
-GET http://localhost:3000/weather/haiphong
+GET http://localhost:3001/weather/haiphong
+### Fetching weather data
+GET http://localhost:3001/weather/oulu
+
+### Fetching weather data
+GET http://localhost:3001/weather/lahti
+
+### Fetching weather data
+GET http://localhost:3001/weather/helsinki
+
+### Fetching all weather data
+GET http://localhost:3001/weather/daily/14-11-2021

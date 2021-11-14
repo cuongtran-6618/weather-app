@@ -4,6 +4,7 @@ const {
     urlBuilder,
     formatWeatherData,
     getToday,
+    formatDate,
 } = require('../helpers/weather');
 const { BadRequestError } = require('../exceptions/BadRequestError');
 const { NotFoundException } = require('../exceptions/NotFoundException');
@@ -36,9 +37,14 @@ module.exports.fetchWeatherDataByCity = async (city) => {
     }
 
     const weatherDataFromAPI = formatWeatherData(apiResponseJson);
-
     try {
-        await this.insertWeatherDataByCity(weatherDataFromAPI);
+        const success = await this.insertWeatherDataByCity(weatherDataFromAPI);
+
+        if (success) {
+            //console.log('Saving weather record successfully');
+        } else {
+            //console.log('Not able to save in the DB');
+        }
     } catch (error) {
         throw new BadRequestError(
             "There's a problem when insert data to MongoDB after fetching data from API"
@@ -50,8 +56,19 @@ module.exports.fetchWeatherDataByCity = async (city) => {
 
 module.exports.insertWeatherDataByCity = async (weatherData) => {
     try {
-        const insertWeatherResponse = await Weather.create(weatherData);
-        return insertWeatherResponse;
+        const isRecordExisted = await Weather.exists(weatherData);
+
+        if (isRecordExisted) {
+            console.log(
+                await Weather.findOne({
+                    city: weatherData.city,
+                    date: weatherData.date,
+                })
+            );
+        } else {
+            const insertWeatherResponse = await Weather.create(weatherData);
+            return insertWeatherResponse;
+        }
     } catch (error) {
         throw new BadRequestError("Can't insert to Mongo DB with given data");
     }
@@ -59,12 +76,11 @@ module.exports.insertWeatherDataByCity = async (weatherData) => {
 
 /**
  * Fetching data of all city by date
- * @route /weather/:city
- * @param string city
+ * @route /daily/:date
+ * @param string date
  */
 module.exports.fetchWeatherDataByDate = async (date = null) => {
-    const searchDay = date || getToday();
-
+    const searchDay = date !== null ? formatDate(date) : getToday();
     // check from db
     const weatherDataInDB = await Weather.find({ date: searchDay });
 
