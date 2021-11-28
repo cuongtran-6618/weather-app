@@ -1,10 +1,11 @@
+const request = require('supertest');
 const {
     fetchWeatherDataByCity,
     insertWeatherDataByCity,
     fetchWeatherDataByDate,
-} = require('../../../services/weather');
-const request = require('supertest');
-const server = require('../../../server');
+} = require('../../../src/services/weather');
+const server = require('../../../src/server');
+
 const serverApp = server();
 
 const { MongoClient } = require('mongodb');

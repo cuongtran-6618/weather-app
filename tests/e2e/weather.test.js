@@ -1,8 +1,8 @@
 const request = require('supertest');
-const server = require('../../server');
-const { getToday } = require('../../helpers/weather');
+const server = require('../../src/server');
+const { getToday } = require('../../src/helpers/weather');
 const { mongoose } = require('../fixtures/db');
-const Weather = require('../../models/Weather');
+const Weather = require('../../src/models/Weather');
 
 const serverApp = server();
 

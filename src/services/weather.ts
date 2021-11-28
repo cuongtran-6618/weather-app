@@ -41,9 +41,9 @@ module.exports.fetchWeatherDataByCity = async (city) => {
         const success = await this.insertWeatherDataByCity(weatherDataFromAPI);
 
         if (success) {
-            //console.log('Saving weather record successfully');
+            // console.log('Saving weather record successfully');
         } else {
-            //console.log('Not able to save in the DB');
+            // console.log('Not able to save in the DB');
         }
     } catch (error) {
         throw new BadRequestError(
